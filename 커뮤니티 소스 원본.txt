@@ -1,0 +1,55 @@
+const cafeId = 29537083;      // 예시로 카봇커 카페 ID를 사용했어요
+const cafeName = 'nameyee';      //이하동문
+const max = 10;      // 가져올 게시글 수
+const all = '​'.repeat(500);
+const Ll = '='.repeat(30);
+let menuData = JSON.parse(org.jsoup.Jsoup.connect('https://apis.naver.com/cafe-web/cafe2/SideMenuList?cafeId=' + cafeId).ignoreContentType(true).get().text());
+let menuList = [];
+for (let n in menuData.message.result.menus) 
+  menuList.push('"' + menuData.message.result.menus[n].menuName + '": ' + menuData.message.result.menus[n].menuId);
+let menuId = JSON.parse('{' + menuList.join(',\n') + '}');
+function response(room, msg, sender) {
+  if (msg == "!게시판") {
+    let result = [];
+    for (let n in menuId)
+      result.push(n);
+    Api.replyRoom(room, ["게시판 이름 모음입니다" + all, Ll, result.join('\n\n')].join('\n\n'));
+  }
+  if (msg.startsWith('!카페')) {
+    try {
+      let menu = msg.substr(4);      //split 쓰려고 했다가, 게시판 이름에 띄어쓰기 등이 들어갈 수 있다는걸 깨달았어요
+      if (menu == '') 
+        return Api.replyRoom(room, ["카페 최신 글 목록" + all, Ll, getArticles()].join('\n\n'));
+      if (menuId[menu] == undefined) 
+        return Api.replyRoom(room, ["해당 게시판이 존재하지 않아 전체 글을 가져옵니다" + all, Ll, getArticles()].join('\n\n'));
+      return Api.replyRoom(room, [msg.substr(4) + ' 게시판의 글 목록' + all, Ll, getArticles(menuId[menu])].join('\n\n'));
+    }    catch (e) {
+}
+  }
+}
+function getArticles(menuId) {
+  let result = [];
+  let data = JSON.parse(org.jsoup.Jsoup.connect('https://apis.naver.com/cafe-web/cafe2/ArticleList.json?search.clubid=' + cafeId + '&search.queryType=lastArticle&search.menuid=' + menuId + '&search.page=1&search.perPage=50&ad=true').ignoreContentType(true).get().text()).message.result.articleList;  // 많은 분들이 substr을 쓰지 말라고 하시지만 일단 저거 쓰고 싶었어요
+  for (let n in data) {
+    result.push([data[n].item.subject, '작성자  |  ' + data[n].item.writerNickname + ' (' + data[n].item.writerId + ')', '링크  |  cafe.naver.com/' + cafeName + '/' + data[n].item.articleId].join('\n'));
+    if (result.length == max) 
+      break;
+  }
+  return result.join('\n\n\n');
+}
+/*
+입맛에 맞게 개조하세요
+data[n].item.readCount == 해당 글의 조회수
+data[n].item.likeItCount == 해당 글의 좋아요 수
+data[n].item.commentCount == 해당 글의 댓글 수
+data[n].item.representImage == 해당 글의 썸네일 링크
+data[n].item.menuName == 해당 글의 게시판 이름
+data[n].item.attachImage == 해당 글의 사진 첨부 여부. attachMusic, attachMovie, attachFile 등등도 존재
+data[n].item.imageAttachCount == 해당 글에 첨부된 이미지 수
+등등
+*/
+
+/*
+[출처] 네이버 카페 전체 / 게시판별 게시글 가져오기 (카카오톡 봇 커뮤니티) | 작성자 헤히
+https://cafe.naver.com/nameyee/29509
+*/
