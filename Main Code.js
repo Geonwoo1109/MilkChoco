@@ -3,8 +3,8 @@ const scriptName = "Milk Choco";
 
 const kalingModule = require('kaling').Kakao();
 const Kakao = new kalingModule();
-Kakao.init(''); //자스키
-Kakao.login('',''); //아디•비번
+Kakao.init('3ec83a6de844b575e244d3b3b5af0ad0'); //자스키
+Kakao.login('ckrgksqns333@gmail.com','wlsWkckrgksqns123'); //아디•비번
 
 var m = [];
 
@@ -29,16 +29,37 @@ function response(room, msg, sender, isGroupChat, replier, imageDB, packageName)
     //replier.reply(m);
     
 Kakao.send(room, {"link_ver" : "4.0",
-                  "template_id" : 45883,
+                  "template_id" : 48199,
                   "template_args" : {
-                    a: "",
-                    b: "",
-                    Img: "https://i.ibb.co/0Chd7rN/image.jpg"
+                    SizsX: 400,
+                    SizeY: 400,
+                    ImgLink: "/0Chd7rN/image.jpg",
+                    Timetable: "https://i.ibb.co/0Chd7rN/image.jpg"
                  }
                  }, "custom");
 
 } catch(e) {
   replier.reply(e);
+}
+}
+  
+  if (msg.startsWith(".클랜레벨")) {
+  try {
+    //replier.reply(m);
+    
+Kakao.send(room, {"link_ver" : "4.0",
+                  "template_id" : 48199,
+                  "template_args" : {
+                    SizsX: 800,
+                    SizeY: 800,
+                    ImgLink: "/TKnKqDg/image.jpg",
+                    Timetable: "https://i.ibb.co/TKnKqDg/image.jpg"
+                 }
+                 }, "custom");
+
+} catch(e) {
+  replier.reply("일시적인 오류입니다!\n컴파일을 완료하였습니다.");
+  Api.reload("Milk Choco");
 }
 }
 
@@ -57,7 +78,7 @@ Kakao.send(room, {"link_ver" : "4.0",
 } 
 
 
-//패치노트!
+
     if (msg == ".패치노트 밀초") {
       var date = new Date();
       var Y = String(date.getFullYear());
@@ -84,5 +105,12 @@ Kakao.send(room, {"link_ver" : "4.0",
         "("+Y+"."+M+"."+D+") 기준   "+allsee +n+ sum.join("\n"));
     sum = [];
   } 
- 
+    
+    
+    
+
+  
+
+
+
 }
